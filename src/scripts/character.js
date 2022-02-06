@@ -5,7 +5,7 @@ export default class Character{
         this.tileFrom = [1,1];
         this.tileTo	= [1,1];
         this.timeMoved = 0;
-        this.dimensions	= [30,30];
+        this.dimensions	= [60,30];
         this.position	= [45,45];
         this.delayMove	= 700;
         

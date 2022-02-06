@@ -31,6 +31,14 @@ export default class Game {
             0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         ];
+
+        this. floorTypes = {
+            solid: 0,
+            path: 1,
+            water: 2,
+        };
+
+
         this.mapW = 20;
         this.mapH = 20;
         this.keysDown = {
@@ -102,13 +110,13 @@ export default class Game {
 			this.ctx.fillRect( x*this.tileW, y*this.tileH, this.tileW, this.tileH);
              }
         }
-        this.ctx.fillStyle = "#0000ff";
-        this.ctx.fillRect(this.player.position[0],this.player.position[1],this.player.dimensions[0],this.player.dimensions[1]);
-        
+
+       let mainCharacter = document.querySelector("#player");
+        this.ctx.drawImage(mainCharacter,this.player.position[0],this.player.position[1],this.player.dimensions[0],this.player.dimensions[1]);    
         
         this.ctx.fillStyle = "#ff0000";
 	    this.ctx.fillText("FPS: " + this.framesLastSecond, 10, 20);
-
+    
         this.lastFrameTime =  currentFrameTime;
 	    requestAnimationFrame(this.drawGame.bind(this));
     }
