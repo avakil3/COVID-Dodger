@@ -20,7 +20,7 @@ export default class Character{
 
     processMovement(t){
         // if the character's tileFrom position equals its TileTo position, then the character is not currently moving
-        if(this.tileFrom[0]==this.tileTo[0] && this.tileFrom[1]==this.tileTo[1]) { 
+        if(this.tileFrom[0]===this.tileTo[0] && this.tileFrom[1]===this.tileTo[1]) { 
             return false; 
         }
 

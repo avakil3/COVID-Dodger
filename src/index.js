@@ -4,8 +4,8 @@ import Game from './scripts/game.js';
 document.addEventListener("DOMContentLoaded", function () {
 
   const canvasEl = document.getElementsByTagName("canvas")[0];
-  canvasEl.width = 400;
-  canvasEl.height = 400;
+  canvasEl.width = 800;
+  canvasEl.height = 800;
   
 
   let ctx = canvasEl.getContext("2d");
@@ -14,10 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
   requestAnimationFrame(game.drawGame.bind(game));
 
   //keyCode is DEPRECATED
-  window.addEventListener("keydown", function(e) {
+  document.addEventListener("keydown", function(e) {
 		if(e.keyCode>=37 && e.keyCode<=40) { game.keysDown[e.keyCode] = true; }
 	});
-	window.addEventListener("keyup", function(e) {
+	document.addEventListener("keyup", function(e) {
 		if(e.keyCode>=37 && e.keyCode<=40) { game.keysDown[e.keyCode] = false; }
 	});
   
