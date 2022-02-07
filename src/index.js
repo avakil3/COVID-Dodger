@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		if(e.keyCode>=37 && e.keyCode<=40) { game.keysDown[e.keyCode] = false; }
 	});
   
+  const pauseButton = document.getElementById("pause-button");
+  pauseButton.addEventListener('click',game.togglePause);
 
 
 });

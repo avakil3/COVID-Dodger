@@ -32,11 +32,11 @@ export default class Character{
             // debugger
 		    this.placeAt(this.destination[0], this.destination[1]);
 	    }else{
-            debugger
+            // debugger
             //this gives the pixel position at the currentPos
             this.position[0] = (this.currentPos[0] * this.tileW) + ((this.tileW-this.dimensions[0])/2);
 		    this.position[1] = (this.currentPos[1] * this.tileH) + ((this.tileH-this.dimensions[1])/2);
-        }
+       }
         // if the character is moving horizonatlly, then calculate the difference in position and add / subtract that from the current position
         if(this.destination[0] !== this.currentPos[0]){
 			var diff = (this.tileW / this.delayMove) * (t-this.timeMoved);

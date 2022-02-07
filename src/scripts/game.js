@@ -8,15 +8,17 @@ var floorTypes = {
 
 var speeds = [
     {name: "level1", multiplier:1},
-    {name: "level2", multiplier:1.1},
-    {name: "level3", multiplier:1.2},
-    {name: "level4", multiplier:1.3},
+    {name: "level2", multiplier:1.2},
+    {name: "level3", multiplier:1.5},
+    {name: "level4", multiplier:2},
     {name: "paused", multiplier:0},
 ];
-var currentSpeed = 1;
+var currentSpeed = 0;
+var prevSpeed = 0;
 var gameTime = 0;
 var score = 0;
-setInterval(()=>{++score},1000);
+var paused = false;
+setInterval(()=>{if(!paused) ++score;},1000);
 var grid = [
     0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 2, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 2, 2, 0,
@@ -47,7 +49,7 @@ var tileTypes = {
     3 : { color:"#286625", floor:floorTypes.solid,	loc:[{x:120,y:0,w:40,h:40}]},
     4 : { color:"#678fd9", floor:floorTypes.water,	loc:[{x:160,y:0,w:40,h:40}]	}
 };
-export {floorTypes,grid,tileTypes };
+export {floorTypes,grid,tileTypes,gameTime};
 
 
 export default class Game {
@@ -72,11 +74,19 @@ export default class Game {
     drawGame(){
         if(this.ctx === null) return;
 
+        if (score > 10 && score < 50){
+            currentSpeed= 1;
+        }else if (score > 50 && score < 100){
+            currentSpeed= 2;
+        }else if (score > 100){
+            currentSpeed= 3;
+        }
         let currentFrameTime = Date.now();
         let timeElapsed = currentFrameTime - this.lastFrameTime;
         gameTime += Math.floor(timeElapsed * speeds[currentSpeed].multiplier);
 
-        if(!this.player.processMovement(gameTime) && speeds[currentSpeed].name != "paused"){ // if the player is currently NOT moving
+
+        if(!this.player.processMovement(gameTime) && speeds[currentSpeed].name !== "paused"){ // if the player is currently NOT moving
 
             if(this.keysDown[38] && //check to see if up arrow is pressed and that tile above is a valid tile to move to
                 this.player.canMoveUp()){
@@ -96,7 +106,7 @@ export default class Game {
             
             if( JSON.stringify(this.player.currentPos) !== JSON.stringify(this.player.destination)){
                     // debugger
-                    this.player.timeMoved = currentFrameTime;
+                    this.player.timeMoved = gameTime;
             }
 
         }
@@ -129,7 +139,17 @@ export default class Game {
     toGridIndex(x, y){
         return((y * this.mapW) + x);
     }
+
+     togglePause(){
+        if (!paused){
+            paused = true;
+            prevSpeed = currentSpeed;
+            currentSpeed = 4; // 4 represents "paused" game state
+        } else if (paused){
+           paused= false;
+           currentSpeed = prevSpeed;
+        }
+    }
+
 }
-
-
 
