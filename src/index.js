@@ -1,6 +1,7 @@
 import Game from './scripts/game.js';
 // const GameView = require("./game_view");
 
+
 document.addEventListener("DOMContentLoaded", function () {
 
   const canvasEl = document.getElementsByTagName("canvas")[0];

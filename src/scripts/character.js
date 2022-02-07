@@ -1,7 +1,11 @@
+import {floorTypes,grid,tileTypes} from './game.js';
+
 export default class Character{
-    constructor(tileW,tileH){
+    constructor(tileW,tileH,mapW,mapH){
         this.tileW = tileW;
-        this.tileH = tileH;
+        this.tileH = tileH; 
+        this.mapW = mapW;
+        this.mapH = mapH;
         this.currentPos = [1,1];
         this.destination = [1,1];
         this.timeMoved = 0;
@@ -28,7 +32,7 @@ export default class Character{
             // debugger
 		    this.placeAt(this.destination[0], this.destination[1]);
 	    }else{
-            // debugger
+            debugger
             //this gives the pixel position at the currentPos
             this.position[0] = (this.currentPos[0] * this.tileW) + ((this.tileW-this.dimensions[0])/2);
 		    this.position[1] = (this.currentPos[1] * this.tileH) + ((this.tileH-this.dimensions[1])/2);
@@ -56,4 +60,46 @@ export default class Character{
         return true;
     }
 
+
+    canMoveTo(x,y){
+        if(x < 0 || x >= this.mapW || y < 0 || y >= this.mapH) {
+            return false;
+        } 
+        else if(tileTypes[grid[this.toGridIndex(x,y)]].floor!=floorTypes.path) {
+            return false;
+        } else{
+            return true;
+        } 
+    }
+
+    canMoveUp(){
+        return this.canMoveTo(this.currentPos[0], this.currentPos[1]-1);
+    }
+    canMoveDown(){
+        return this.canMoveTo(this.currentPos[0], this.currentPos[1]+1);
+    }
+    canMoveLeft(){
+        return this.canMoveTo(this.currentPos[0]-1, this.currentPos[1]);
+    }
+    canMoveRight(){
+        return this.canMoveTo(this.currentPos[0]+1, this.currentPos[1]);
+    }
+
+    moveLeft(time){
+        this.destination[0]-=1; this.timeMoved = time; 
+    }	
+    moveRight(time){
+        this.destination[0]+=1; this.timeMoved = time; 
+    }
+    moveUp(time){
+        this.destination[1]-=1; this.timeMoved = time; 
+    }
+    moveDown(time){
+        this.destination[1]+=1; this.timeMoved = time; 
+    }
+
+
+    toGridIndex(x, y){
+        return((y * this.mapW) + x);
+    }
 }
