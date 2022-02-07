@@ -1,28 +1,26 @@
-import {floorTypes,grid,tileTypes} from './game.js';
+import {floorTypes,grid,tileTypes,mapW,mapH} from './game.js';
+var tileW = 40;
+var tileH = 40;
 
 export default class Character{
-    constructor(tileW,tileH,mapW,mapH){
-        this.tileW = tileW;
-        this.tileH = tileH; 
-        this.mapW = mapW;
-        this.mapH = mapH;
-        this.currentPos = [1,1];
-        this.destination = [1,1];
+    constructor(currentPos,position){
+        this.currentPos = currentPos.slice();
+        this.destination = currentPos.slice();
         this.timeMoved = 0;
         this.dimensions	= [60,30];
-        this.position	= [45,45];
+        this.position	= position;
         this.delayMove	= 300; //represents time it takes to move one tile
-        
+        // debugger
     }
 
     placeAt(x,y){
         this.currentPos = [x,y];
 	    this.destination = [x,y];
-	    this.position = [((this.tileW*x)+((this.tileW-this.dimensions[0])/2)),
-		((this.tileH*y)+((this.tileH-this.dimensions[1])/2))];
+	    this.position = [((tileW*x)+((tileW-this.dimensions[0])/2)),
+		((tileH*y)+((tileH-this.dimensions[1])/2))];
     }
 
-    processMovement(t){
+    move(t){
         // if the character's currentPos position equals its TileTo position, then the character is not currently moving
         if(JSON.stringify(this.currentPos) === JSON.stringify(this.destination)) { 
             return false; 
@@ -34,12 +32,13 @@ export default class Character{
 	    }else{
             // debugger
             //this gives the pixel position at the currentPos
-            this.position[0] = (this.currentPos[0] * this.tileW) + ((this.tileW-this.dimensions[0])/2);
-		    this.position[1] = (this.currentPos[1] * this.tileH) + ((this.tileH-this.dimensions[1])/2);
+            this.position[0] = (this.currentPos[0] * tileW) + ((tileW-this.dimensions[0])/2);
+		    this.position[1] = (this.currentPos[1] * tileH) + ((tileH-this.dimensions[1])/2);
        }
+       debugger
         // if the character is moving horizonatlly, then calculate the difference in position and add / subtract that from the current position
         if(this.destination[0] !== this.currentPos[0]){
-			var diff = (this.tileW / this.delayMove) * (t-this.timeMoved);
+			let diff = (tileW / this.delayMove) * (t-this.timeMoved);
             if(this.destination[0]<this.currentPos[0]){
                 this.position[0]-= diff;
             }else{
@@ -48,7 +47,7 @@ export default class Character{
 		}
         // if the character is moving vertically, then calculate the difference in position and add / subtract that from the current position
 		if(this.destination[1] != this.currentPos[1]){
-			var diff = (this.tileH / this.delayMove) * (t-this.timeMoved);
+			let diff = (tileH / this.delayMove) * (t-this.timeMoved);
             if(this.destination[1]<this.currentPos[1]){
                 this.position[1]-= diff;
             }else{
@@ -62,7 +61,7 @@ export default class Character{
 
 
     canMoveTo(x,y){
-        if(x < 0 || x >= this.mapW || y < 0 || y >= this.mapH) {
+        if(x < 0 || x >= mapW || y < 0 || y >= mapH) {
             return false;
         } 
         else if(tileTypes[grid[this.toGridIndex(x,y)]].floor!=floorTypes.path) {
@@ -100,6 +99,61 @@ export default class Character{
 
 
     toGridIndex(x, y){
-        return((y * this.mapW) + x);
+        return((y * mapW) + x);
     }
+}
+
+
+export class CovidSprite extends Character {
+    constructor(currentPos,position){
+        super(currentPos,position);
+        this.timeMoved1 = 0;
+    }
+
+    move(t){
+
+        if((t-this.timeMoved1)>=this.delayMove){
+            // debugger
+		    this.placeAt(this.destination[0], this.destination[1]);
+            this.timeMoved1 = t;
+	    }else{
+            // debugger
+            //this gives the pixel position at the currentPos
+            this.position[0] = (this.destination[0] * tileW) + ((tileW-this.dimensions[0])/2);
+		    this.position[1] = (this.destination[1] * tileH) + ((tileH-this.dimensions[1])/2);
+       }
+        
+       
+			// let diff = (tileW / this.delayMove) * (t-this.timeMoved1);
+            // debugger
+            // if(this.destination[0]<this.currentPos[0]){
+            //     this.position[0]-= diff; //this.destination[0] * tileW
+            // }else{
+            //     this.position[0]+= diff;
+            // }
+	
+
+			// diff = (tileH / this.delayMove) * (t-this.timeMoved1);
+            // if(this.destination[1]<this.currentPos[1]){
+            //     this.position[1]-= diff;
+            // }else{
+            //     this.position[1]+= diff;
+            // }
+		this.currentPos = this.destination.slice();
+        this.position[0] = Math.round(this.position[0]);
+        this.position[1] = Math.round(this.position[1]);
+     
+        return true;
+    }
+
+    moveHelper(gameTime){
+        this.move(gameTime);
+        this.timeMoved1 = gameTime;
+        // debugger
+        if (this.canMoveRight()) {
+            this.moveRight(gameTime);
+            
+        }
+    }
+
 }

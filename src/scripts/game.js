@@ -1,4 +1,5 @@
 import Character from './character.js';
+import {CovidSprite} from './character.js';
 
 var floorTypes = {
     solid: 0,
@@ -30,9 +31,9 @@ var grid = [
     0, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0,
     0, 1, 1, 1, 1, 2, 4, 4, 4, 4, 4, 1, 1, 1, 2, 2, 2, 2, 1, 0,
     0, 1, 1, 1, 1, 2, 3, 2, 1, 1, 4, 1, 1, 1, 1, 3, 3, 2, 1, 0,
-    0, 1, 2, 2, 2, 2, 1, 2, 1, 1, 4, 1, 1, 1, 1, 1, 3, 2, 1, 0,
-    0, 1, 2, 3, 3, 2, 1, 2, 1, 1, 4, 4, 4, 4, 4, 4, 4, 2, 4, 4,
-    0, 1, 2, 3, 3, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0,
+    0, 1, 2, 2, 2, 2, 2, 2, 1, 1, 4, 1, 1, 1, 1, 1, 3, 2, 1, 0,
+    0, 1, 2, 3, 3, 2, 2, 2, 1, 1, 4, 4, 4, 4, 4, 4, 4, 2, 4, 4,
+    0, 1, 2, 3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0,
     0, 1, 2, 3, 4, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 0, 1, 2, 1, 0,
     0, 3, 2, 3, 4, 4, 1, 2, 2, 2, 2, 2, 2, 2, 1, 0, 1, 2, 1, 0,
     0, 3, 2, 3, 4, 4, 3, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 3, 0,
@@ -43,32 +44,37 @@ var grid = [
 ];
 
 var tileTypes = {
-    0 : { color:"#685b48", floor:floorTypes.solid, loc:[{x:0,y:0,w:40,h:40}]	},
-    1 : { color:"#5aa457", floor:floorTypes.path,	loc:[{x:40,y:0,w:40,h:40}]	},
-    2 : { color:"#e8bd7a", floor:floorTypes.path,	loc:[{x:80,y:0,w:40,h:40}]	},
-    3 : { color:"#286625", floor:floorTypes.solid,	loc:[{x:120,y:0,w:40,h:40}]},
-    4 : { color:"#678fd9", floor:floorTypes.water,	loc:[{x:160,y:0,w:40,h:40}]	}
+    0 : { floor:floorTypes.solid, loc:[{x:0,y:0,w:40,h:40}]	},
+    1 : { floor:floorTypes.path,	loc:[{x:40,y:0,w:40,h:40}]	},
+    2 : { floor:floorTypes.path,	loc:[{x:80,y:0,w:40,h:40}]	},
+    3 : { floor:floorTypes.solid,	loc:[{x:120,y:0,w:40,h:40}]},
+    4 : { floor:floorTypes.water,	loc:[{x:160,y:0,w:40,h:40}]	}
 };
-export {floorTypes,grid,tileTypes,gameTime};
+
+var mapW = 20;
+var mapH = 20;
+var tileW = 40;
+var tileH = 40;
+export {floorTypes,grid,tileTypes,mapW,mapH,tileW,tileH};
 
 
 export default class Game {
     constructor(ctx){
         this.ctx = ctx;
-        this.tileW = 40;
-        this.tileH = 40;
+       
         this.lastFrameTime = 0;
 
-        this.mapW = 20;
-        this.mapH = 20;
+        
         this.keysDown = {
-            37 : false, //left arrow
-            38 : false, //up arrow
-            39 : false,//right arrow
-            40 : false //down arrow
+            'ArrowLeft' : false, //left arrow
+            'ArrowUp' : false, //up arrow
+            'ArrowRight' : false,//right arrow
+            'ArrowDown' : false //down arrow
         };
         
-        this.player = new Character(this.tileW,this.tileH, this.mapW, this.mapH);
+        this.player = new Character([1,1],[45,45]);
+        this.sprite = new CovidSprite([5,5],[5*tileW,5*tileH]);
+        // debugger
     }
 
     drawGame(){
@@ -86,26 +92,25 @@ export default class Game {
         gameTime += Math.floor(timeElapsed * speeds[currentSpeed].multiplier);
 
 
-        if(!this.player.processMovement(gameTime) && speeds[currentSpeed].name !== "paused"){ // if the player is currently NOT moving
+        if(!this.player.move(gameTime) && speeds[currentSpeed].name !== "paused"){ // if the player is currently NOT moving
 
-            if(this.keysDown[38] && //check to see if up arrow is pressed and that tile above is a valid tile to move to
+            if(this.keysDown['ArrowUp'] && //check to see if up arrow is pressed and that tile above is a valid tile to move to
                 this.player.canMoveUp()){
                     this.player.moveUp(gameTime);
 
-            }else if (this.keysDown[40] &&
+            }else if (this.keysDown['ArrowDown'] &&
                     this.player.canMoveDown()){
                     this.player.moveDown(gameTime);    
-            }else if(this.keysDown[37] && 
+            }else if(this.keysDown['ArrowLeft'] && 
                 this.player.canMoveLeft()){
                     this.player.moveLeft(gameTime);   
 
-            }else if (this.keysDown[39] &&
+            }else if (this.keysDown['ArrowRight'] &&
                     this.player.canMoveRight()){
                     this.player.moveRight(gameTime);    
             }
             
             if( JSON.stringify(this.player.currentPos) !== JSON.stringify(this.player.destination)){
-                    // debugger
                     this.player.timeMoved = gameTime;
             }
 
@@ -113,13 +118,12 @@ export default class Game {
 
         let tileImage = document.querySelector("#tileset");
 
-        for(let y = 0; y < this.mapH; ++y){ // nested loops to fill in the grid based on the grid array
-		    for(let x = 0; x < this.mapW; ++x){
+        for(let y = 0; y < mapH; ++y){ // nested loops to fill in the grid based on the grid array
+		    for(let x = 0; x < mapW; ++x){
                 let tile = tileTypes[grid[this.toGridIndex(x,y)]];
-                // debugger
-                let dX = (x * this.tileW);
-                let dY = (y * this.tileH);
-                this.ctx.drawImage(tileImage, tile.loc[0].x, tile.loc[0].y,tile.loc[0].w,tile.loc[0].h,dX,dY,this.tileW, this.tileH);
+                let dX = (x * tileW);
+                let dY = (y * tileH);
+                this.ctx.drawImage(tileImage, tile.loc[0].x, tile.loc[0].y,tile.loc[0].w,tile.loc[0].h,dX,dY,tileW, tileH);
 
              }
         }
@@ -127,17 +131,29 @@ export default class Game {
        let mainCharacter = document.querySelector("#player");
         this.ctx.drawImage(mainCharacter,this.player.position[0],this.player.position[1],this.player.dimensions[0],this.player.dimensions[1]);    
     
+        let covidSpriteEl = document.querySelector("#covidSprite");
+        this.ctx.drawImage(covidSpriteEl,this.sprite.position[0],this.sprite.position[1],this.sprite.dimensions[0],this.sprite.dimensions[1]);    
+
+
         this.ctx.fillStyle = '#ffffff';
         this.ctx.fillText(`Score: ${score}`,10,20);
         this.ctx.fillText(`Game speed: ${speeds[currentSpeed].name}`,10,40);
         // debugger
     
         this.lastFrameTime =  currentFrameTime;
+        
+        // debugger
+        if(speeds[currentSpeed].name !== "paused"){
+            // debugger
+            setInterval(this.sprite.moveHelper.bind(this.sprite,gameTime),1000);
+        }
+        
+        // debugger
 	    requestAnimationFrame(this.drawGame.bind(this));
     }
     
     toGridIndex(x, y){
-        return((y * this.mapW) + x);
+        return((y * mapW) + x);
     }
 
      togglePause(){
