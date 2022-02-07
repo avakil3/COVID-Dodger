@@ -5,11 +5,11 @@ export default class Game {
         this.ctx = ctx;
         this.tileW = 40;
         this.tileH = 40;
-        this.currentSecond = 0;
-        this.frameCount = 0;
-        this.framesLastSecond = 0;
+        // this.currentSecond = 0;
+        // this.frameCount = 0;
+        // this.framesLastSecond = 0;
         this.lastFrameTime = 0;
-        this.gameMap = [
+        this.grid = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0,
             0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0,
@@ -32,10 +32,18 @@ export default class Game {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         ];
 
-        this. floorTypes = {
+        this.floorTypes = {
             solid: 0,
             path: 1,
             water: 2,
+        };
+
+        this.tileTypes = {
+            0 : { colour:"#685b48", floor: this.floorTypes.solid	},
+            1 : { colour:"#5aa457", floor:this.floorTypes.path	},
+            2 : { colour:"#e8bd7a", floor:this.floorTypes.path	},
+            3 : { colour:"#286625", floor:this.floorTypes.solid	},
+            4 : { colour:"#678fd9", floor:this.floorTypes.water	}
         };
 
 
@@ -56,51 +64,48 @@ export default class Game {
 
         let currentFrameTime = Date.now();
         let timeElapsed = currentFrameTime - this.lastFrameTime;
-        let sec = Math.floor(Date.now()/1000);
-        if (sec!== this.currentSecond){
-            this.currentSecond = sec;
-            this.framesLastSecond = this.frameCount;
-            this.frameCount = 1;
-        } else{
-            this.frameCount++;
-        }
+        // let sec = Math.floor(Date.now()/1000);
+        // if (sec!== this.currentSecond){
+        //     this.currentSecond = sec;
+        //     this.framesLastSecond = this.frameCount;
+        //     this.frameCount = 1;
+        // } else{
+        //     this.frameCount++;
+        // }
 
         if(!this.player.processMovement(currentFrameTime)){ // if the player is currently NOT moving
 
             if(this.keysDown[38] && //check to see if up arrow is pressed and that tile above is a valid tile to move to
-                this.player.tileFrom[1]>0 && 
-                this.gameMap[this.toIndex(this.player.tileFrom[0],this.player.tileFrom[1]-1)]===1){
-                    // this.player.tileTo[1]--;
-                    this.player.tileTo[1]-=1;    
+                this.player.currentPos[1]>0 && 
+                this.grid[this.toIndex(this.player.currentPos[0],this.player.currentPos[1]-1)]===1){
+                    this.player.destination[1]--;
 
             }else if (this.keysDown[40] &&
-                    this.player.tileFrom[1] < (this.mapH-1) &&
-                    this.gameMap[this.toIndex(this.player.tileFrom[0],this.player.tileFrom[1]+1)]===1){
-                    // this.player.tileTo[1]++;    
-                    this.player.tileTo[1]+=1;    
+                    this.player.currentPos[1] < (this.mapH-1) &&
+                    this.grid[this.toIndex(this.player.currentPos[0],this.player.currentPos[1]+1)]===1){
+                    this.player.destination[1]++;    
             }else if(this.keysDown[37] && 
-                this.player.tileFrom[0]>0 && 
-                this.gameMap[this.toIndex(this.player.tileFrom[0]-1,this.player.tileFrom[1])]===1){
-                    // this.player.tileTo[0]--;   
-                    this.player.tileTo[0]-=1;   
+                this.player.currentPos[0]>0 && 
+                this.grid[this.toIndex(this.player.currentPos[0]-1,this.player.currentPos[1])]===1){
+                    this.player.destination[0]--;   
 
             }else if (this.keysDown[39] &&
-                    this.player.tileFrom[0] < (this.mapW-1) &&
-                    this.gameMap[this.toIndex(this.player.tileFrom[0]+1,this.player.tileFrom[1])]===1){
-                    // this.player.tileTo[0]++;    
-                    this.player.tileTo[0]+=1;    
+                    this.player.currentPos[0] < (this.mapW-1) &&
+                    this.grid[this.toIndex(this.player.currentPos[0]+1,this.player.currentPos[1])]===1){
+                    this.player.destination[0]++;    
             }
             
-            if(this.player.tileFrom[0] !== this.player.tileFrom[0] ||
-                this.player.tileFrom[1] !== this.player.tileFrom[1]){
+            if(this.player.currentPos[0] !== this.player.destination[0] ||
+                this.player.currentPos[1] !== this.player.destination[1]){
+                    // debugger
                     this.player.timeMoved = currentFrameTime;
             }
 
         }
 
-        for(let y = 0; y < this.mapH; ++y){ // nested loops to fill in the gameMap based on the gameMap array
+        for(let y = 0; y < this.mapH; ++y){ // nested loops to fill in the grid based on the grid array
 		    for(let x = 0; x < this.mapW; ++x){
-                switch(this.gameMap[((y*this.mapW)+x)]){
+                switch(this.grid[((y*this.mapW)+x)]){
                     case 0:
                         this.ctx.fillStyle = "#000000";
                         break;
@@ -114,8 +119,8 @@ export default class Game {
        let mainCharacter = document.querySelector("#player");
         this.ctx.drawImage(mainCharacter,this.player.position[0],this.player.position[1],this.player.dimensions[0],this.player.dimensions[1]);    
         
-        this.ctx.fillStyle = "#ff0000";
-	    this.ctx.fillText("FPS: " + this.framesLastSecond, 10, 20);
+        // this.ctx.fillStyle = "#ff0000";
+	    // this.ctx.fillText("FPS: " + this.framesLastSecond, 10, 20);
     
         this.lastFrameTime =  currentFrameTime;
 	    requestAnimationFrame(this.drawGame.bind(this));
