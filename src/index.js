@@ -1,6 +1,5 @@
 import Game from './scripts/game.js';
-// const GameView = require("./game_view");
-
+// import {hasGameEnded} from './scripts/game.js';
 
 document.addEventListener("DOMContentLoaded", playGame);
 
@@ -10,13 +9,12 @@ function playGame(){
     const canvasEl = document.getElementsByTagName("canvas")[0];
     canvasEl.width = 920;
     canvasEl.height = 800;
-    
   
     let ctx = canvasEl.getContext("2d");
     ctx.font = "bold 12pt comic-sans";
-    const game = new Game(ctx);
+    const game = new Game(ctx,canvasEl);
     requestAnimationFrame(game.drawGame.bind(game));
-  
+    
   
     document.addEventListener("keydown", function(e) {
       if(['ArrowDown','ArrowUp','ArrowRight','ArrowLeft'].includes(e.key)) game.keysDown[e.key] = true; 
@@ -32,6 +30,7 @@ function playGame(){
   
     const restartButton = document.getElementById("restart-button");
     restartButton.addEventListener('click',()=>{
+      ctx.clearRect(0,0,canvasEl.width,canvasEl.height);
       playGame();
     
     });

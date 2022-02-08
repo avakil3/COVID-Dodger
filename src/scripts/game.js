@@ -6,6 +6,7 @@ var floorTypes = {
     path: 1,
     water: 2,
 };
+var hasGameEnded = false;
 
 var speeds = [
     {name: "level1", multiplier:1},
@@ -57,8 +58,9 @@ export {floorTypes,grid,tileTypes,mapW,mapH,tileW,tileH};
 
 
 export default class Game {
-    constructor(ctx){
+    constructor(ctx,canvasEl){
         this.ctx = ctx;
+        this.canvasEl = canvasEl;
         this.lastFrameTime = 0;
         this.keysDown = {
             'ArrowLeft' : false, //left arrow
@@ -140,7 +142,6 @@ export default class Game {
                 let dY = (y * tileH);
                 this.ctx.drawImage(tileImage, tile.loc[0].x, tile.loc[0].y,tile.loc[0].w,tile.loc[0].h,dX,dY,tileW, tileH);
              }
-
         }
 
        let mainCharacter = document.querySelector("#player");
@@ -173,18 +174,22 @@ export default class Game {
             }
         }
 
-        if(this.collided()){
-            this.endGame();
+        if(this.collided()){ // If collision occurs, the game ends
+             this.ctx.fillStyle = '#000';
+
+            this.ctx.drawImage(document.querySelector("#game-over"),100,150,this.canvasEl.width-200,400);    
+            this.ctx.font = "bold 30pt calibri";
+            this.ctx.fillText(`Final Score: ${this.score}`,this.canvasEl.width/3+20,600);
+            return; 
         }
 
         this.ctx.fillStyle = '#ffffff';
         this.ctx.fillText(`Score: ${this.score}`,10,20);
         this.ctx.fillText(`Game speed: ${speeds[this.currentSpeed].name}`,10,40);
-        // debugger
         
-    
-        // debugger
         this.lastFrameTime = currentFrameTime;
+    
+          
 	    requestAnimationFrame(this.drawGame.bind(this));
     }
     
@@ -216,19 +221,14 @@ export default class Game {
 
 
     collided(){
-        // debugger
+        let collided = false;
         this.sprites.forEach(sprite => {
             let infectedArea = this.infectedArea(sprite);
-            if(this.currentSpeed !== 4){
-                console.log(infectedArea)
-            console.log(`Player: ${this.player.currentPos}`)
-            }
             if (find(infectedArea,this.player.currentPos)|| find(infectedArea,this.player.destination)){
-                // debugger
-                return true;
+                collided = true;
             }
-            return false;
         });
+        return collided;
     }
 
     infectedArea(sprite){
@@ -245,13 +245,7 @@ export default class Game {
         return validMoves;
     }
 
-    endGame(){
 
-        let endGamePopUp= document.createElement("p");
-            endGamePopUp.innerText = "COLLIDED";
-            document.body.append(endGamePopUp);
-            console.log("COLLIDED");
-    }
 
 
 }
