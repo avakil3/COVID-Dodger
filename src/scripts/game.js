@@ -1,12 +1,13 @@
 import Character from './character.js';
-import {CovidSprite} from './character.js';
+import {CovidSprite} from './covidSprite.js';
+import Vaccine from './vaccine.js';
 
 var floorTypes = {
     solid: 0,
     path: 1,
     water: 2,
 };
-var hasGameEnded = false;
+
 
 var speeds = [
     {name: "level1", multiplier:1},
@@ -63,10 +64,10 @@ export default class Game {
         this.canvasEl = canvasEl;
         this.lastFrameTime = 0;
         this.keysDown = {
-            'ArrowLeft' : false, //left arrow
-            'ArrowUp' : false, //up arrow
-            'ArrowRight' : false,//right arrow
-            'ArrowDown' : false //down arrow
+            'ArrowLeft' : false, 
+            'ArrowUp' : false, 
+            'ArrowRight' : false,
+            'ArrowDown' : false 
         };
         this.score = 0;
         setInterval(()=>{if(!this.paused) ++this.score;},1000);
@@ -75,7 +76,9 @@ export default class Game {
         this.prevSpeed = 0;
         this.sprites = [];
         this.spriteElements = [];
-        this.lastSpriteTime = 0;
+        this.vaccineElements = [];
+
+        this.frameCounter = 0;
         this.gameTime = 0;
         this.paused = false;
         this.spriteSpeed = 25;
@@ -83,23 +86,23 @@ export default class Game {
         this.player = new Character([1,1],[45,45]);
         this.sprite1 = new CovidSprite([5,5],[5*tileW,5*tileH]);
         this.sprite2 = new CovidSprite([17,11],[17*tileW,11*tileH]);
+        this.vaccine = new Vaccine([20,2]);
+        this.vaccine.addVaccine(this.vaccineElements);
         
         this.sprites.push(this.sprite1);
         this.addSprites(this.sprite1);
         this.sprites.push(this.sprite2);
         this.addSprites(this.sprite2);
-
-        // debugger
     }
 
     drawGame(){
         if(this.ctx === null) return;
 
-        if (this.score > 10 && this.score < 50 && speeds[this.currentSpeed].name !== "paused"){
+        if (this.score > 10 && this.score < 40 && speeds[this.currentSpeed].name !== "paused"){
             this.currentSpeed= 1;
-        }else if (this.score > 50 && this.score < 100 && speeds[this.currentSpeed].name !== "paused"){
+        }else if (this.score > 40 && this.score < 60 && speeds[this.currentSpeed].name !== "paused"){
             this.currentSpeed= 2;
-        }else if (this.score > 100 && speeds[this.currentSpeed].name !== "paused"){
+        }else if (this.score > 60 && speeds[this.currentSpeed].name !== "paused"){
             this.currentSpeed= 3;
         }
         
@@ -138,9 +141,7 @@ export default class Game {
         for(let y = 0; y < mapH; ++y){ // nested loops to fill in the grid based on the grid array
 		    for(let x = 0; x < mapW; ++x){
                 let tile = tileTypes[grid[this.toGridIndex(x,y)]];
-                let dX = (x * tileW);
-                let dY = (y * tileH);
-                this.ctx.drawImage(tileImage, tile.loc[0].x, tile.loc[0].y,tile.loc[0].w,tile.loc[0].h,dX,dY,tileW, tileH);
+                this.ctx.drawImage(tileImage, tile.loc[0].x, tile.loc[0].y,tile.loc[0].w,tile.loc[0].h,(x * tileW),(y * tileH),tileW, tileH);
              }
         }
 
@@ -150,31 +151,56 @@ export default class Game {
         for(let i=0;i<this.sprites.length;i++){
             this.ctx.drawImage(this.spriteElements[i],this.sprites[i].position[0],this.sprites[i].position[1],this.sprites[i].dimensions[0],this.sprites[i].dimensions[1]);    
         }
-
+        if(this.score > 20 && this.score < 40){
+            for(let i=0;i<this.vaccineElements.length;i++){
+                this.ctx.drawImage(this.vaccineElements[i],this.vaccine.position[0],this.vaccine.position[1],this.vaccine.dimensions[0],this.vaccine.dimensions[1]);    
+            }
+        }
+        
+        // if the player captures the vaccine, then remove that vaccine from the vaccines list
+        if(JSON.stringify(this.vaccine.currentPos) === JSON.stringify(this.player.currentPos) && this.vaccineElements.length !== 0){
+            this.player.covidImmunity = true;
+            this.vaccineElements.pop();
+            this.player.hasVaccineBeenUsed = true;
+        }
+        if(this.player.hasVaccineBeenUsed) {
+            setTimeout(()=>{  
+                   this.player.hasVaccineBeenUsed = false;
+                   this.player.covidImmunity = false; 
+            },10000);
+        }
 
         //logic for Sprites Movement
         if(speeds[this.currentSpeed].name !== "paused"){
             let move = false;
-            this.lastSpriteTime +=1;
-            this.lastSpriteTime = this.lastSpriteTime % this.spriteSpeed;
-            if (this.lastSpriteTime === this.spriteSpeed-1) {move = true};
+            this.frameCounter +=1;
+            this.frameCounter = this.frameCounter % this.spriteSpeed;
+            if (this.frameCounter === this.spriteSpeed-1) {move = true};
             
-            if (this.score === 10 && this.lastSpriteTime===24){
+            if (this.score === 10 && this.frameCounter===0){
                 let newSprite = new CovidSprite([5,12],[5*tileW,12*tileH]);
                 this.sprites.push(newSprite);
                 this.addSprites(newSprite); 
-            } else if (this.score === 20 && this.lastSpriteTime===24){
+                this.spriteSpeed = 20;
+            } else if (this.score === 20 && this.frameCounter===0){
+                // debugger
                 let newSprite = new CovidSprite([17,17],[17*tileW,17*tileH]);
                 this.sprites.push(newSprite);
                 this.addSprites(newSprite); 
-            } 
+            }else if (this.score === 5 && this.frameCounter===0){
+                // debugger
+                let newSprite = new CovidSprite([15,4],[15*tileW,4*tileH]);
+                this.sprites.push(newSprite);
+                this.addSprites(newSprite); 
+            }  
+            
 
             if (move) {
                 this.sprites.forEach(sprite => sprite.moveHelper(this.gameTime));
             }
         }
 
-        if(this.collided()){ // If collision occurs, the game ends
+        if(this.collided() && !this.player.covidImmunity){ // If collision occurs, the game ends
              this.ctx.fillStyle = '#000';
 
             this.ctx.drawImage(document.querySelector("#game-over"),100,150,this.canvasEl.width-200,400);    
@@ -184,8 +210,9 @@ export default class Game {
         }
 
         this.ctx.fillStyle = '#ffffff';
-        this.ctx.fillText(`Score: ${this.score}`,10,20);
-        this.ctx.fillText(`Game speed: ${speeds[this.currentSpeed].name}`,10,40);
+        this.ctx.font = "bold 20pt comic-sans";
+        this.ctx.fillText(`Score: ${this.score}`,10,25);
+        // this.ctx.fillText(`Game speed: ${speeds[this.currentSpeed].name}`,10,40);
         
         this.lastFrameTime = currentFrameTime;
     
@@ -213,7 +240,7 @@ export default class Game {
         let bodyEl = document.getElementsByTagName("body")[0];
         spriteArr.forEach(el => {
             let covidSpriteEl = document.createElement("img");
-            covidSpriteEl.src = "./images/covidSprite.jpeg";
+            covidSpriteEl.src = "./images/covidSprite.png";
             this.spriteElements.push(covidSpriteEl);
             bodyEl.append(covidSpriteEl);
         });

@@ -11,7 +11,6 @@ function playGame(){
     canvasEl.height = 800;
   
     let ctx = canvasEl.getContext("2d");
-    ctx.font = "bold 12pt comic-sans";
     const game = new Game(ctx,canvasEl);
     requestAnimationFrame(game.drawGame.bind(game));
     
