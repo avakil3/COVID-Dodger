@@ -35,7 +35,6 @@ export default class Character{
             this.position[0] = (this.currentPos[0] * tileW) + ((tileW-this.dimensions[0])/2);
 		    this.position[1] = (this.currentPos[1] * tileH) + ((tileH-this.dimensions[1])/2);
        }
-       debugger
         // if the character is moving horizonatlly, then calculate the difference in position and add / subtract that from the current position
         if(this.destination[0] !== this.currentPos[0]){
 			let diff = (tileW / this.delayMove) * (t-this.timeMoved);
@@ -108,6 +107,7 @@ export class CovidSprite extends Character {
     constructor(currentPos,position){
         super(currentPos,position);
         this.timeMoved1 = 0;
+        this.dimensions = [35,35];
     }
 
     move(t){
@@ -123,22 +123,6 @@ export class CovidSprite extends Character {
 		    this.position[1] = (this.destination[1] * tileH) + ((tileH-this.dimensions[1])/2);
        }
         
-       
-			// let diff = (tileW / this.delayMove) * (t-this.timeMoved1);
-            // debugger
-            // if(this.destination[0]<this.currentPos[0]){
-            //     this.position[0]-= diff; //this.destination[0] * tileW
-            // }else{
-            //     this.position[0]+= diff;
-            // }
-	
-
-			// diff = (tileH / this.delayMove) * (t-this.timeMoved1);
-            // if(this.destination[1]<this.currentPos[1]){
-            //     this.position[1]-= diff;
-            // }else{
-            //     this.position[1]+= diff;
-            // }
 		this.currentPos = this.destination.slice();
         this.position[0] = Math.round(this.position[0]);
         this.position[1] = Math.round(this.position[1]);
@@ -149,11 +133,13 @@ export class CovidSprite extends Character {
     moveHelper(gameTime){
         this.move(gameTime);
         this.timeMoved1 = gameTime;
-        // debugger
-        if (this.canMoveRight()) {
-            this.moveRight(gameTime);
-            
-        }
+        let validMoves = [];
+        if (this.canMoveUp()) validMoves.push(this.moveUp.bind(this));
+        if (this.canMoveDown()) validMoves.push(this.moveDown.bind(this));
+        if (this.canMoveLeft()) validMoves.push(this.moveLeft.bind(this));
+        if (this.canMoveRight()) validMoves.push(this.moveRight.bind(this));
+        let randomMove = validMoves[Math.floor(Math.random()*validMoves.length)];
+        randomMove(gameTime);
     }
 
 }

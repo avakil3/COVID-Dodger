@@ -5,7 +5,7 @@ import Game from './scripts/game.js';
 document.addEventListener("DOMContentLoaded", function () {
 
   const canvasEl = document.getElementsByTagName("canvas")[0];
-  canvasEl.width = 800;
+  canvasEl.width = 920;
   canvasEl.height = 800;
   
 
@@ -25,6 +25,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const pauseButton = document.getElementById("pause-button");
   pauseButton.addEventListener('click',game.togglePause);
 
+  const restartButton = document.getElementById("restart-button");
+  restartButton.addEventListener('click',()=>{
+    ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+    // debugger
+  });
 
 });
+
 
