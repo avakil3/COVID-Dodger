@@ -86,7 +86,7 @@ export default class Game {
         this.player = new Character([1,1],[45,45]);
         this.sprite1 = new CovidSprite([5,5],[5*tileW,5*tileH]);
         this.sprite2 = new CovidSprite([17,11],[17*tileW,11*tileH]);
-        this.vaccine = new Vaccine([20,2]);
+        this.vaccine = new Vaccine([20,2]); //20,2
         this.vaccine.addVaccine(this.vaccineElements);
         
         this.sprites.push(this.sprite1);
@@ -151,10 +151,18 @@ export default class Game {
         for(let i=0;i<this.sprites.length;i++){
             this.ctx.drawImage(this.spriteElements[i],this.sprites[i].position[0],this.sprites[i].position[1],this.sprites[i].dimensions[0],this.sprites[i].dimensions[1]);    
         }
-        if(this.score > 20 && this.score < 40){
+        if(this.score > 5){
             for(let i=0;i<this.vaccineElements.length;i++){
                 this.ctx.drawImage(this.vaccineElements[i],this.vaccine.position[0],this.vaccine.position[1],this.vaccine.dimensions[0],this.vaccine.dimensions[1]);    
             }
+        }
+
+        if(this.player.covidImmunity){
+            this.ctx.fillStyle = "#ffffff";
+            this.ctx.font = "bold 20pt calibri";
+
+            this.ctx.fillText(`You are immune for 10 seconds!`,this.canvasEl.width-600,80);
+    
         }
         
         // if the player captures the vaccine, then remove that vaccine from the vaccines list

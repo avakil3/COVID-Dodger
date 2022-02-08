@@ -22,6 +22,24 @@ function playGame(){
       if(['ArrowDown','ArrowUp','ArrowRight','ArrowLeft'].includes(e.key)) game.keysDown[e.key] = false;
     });
     
+  
+  const backgroundMusic = document.createElement('audio');
+  backgroundMusic.src = './sounds/background-music.mp3';
+
+  const musicButton = document.getElementById("sound");
+  musicButton.addEventListener("click", function(e) {
+    // debugger
+    if(backgroundMusic.paused) {
+      backgroundMusic.play();
+      backgroundMusic.loop = true;
+    }else{
+      backgroundMusic.pause();
+    }
+    
+  });
+  
+  
+  
     const pauseButton = document.getElementById("pause-button");
     pauseButton.addEventListener('click',game.togglePause.bind(game));
   

@@ -12,6 +12,7 @@ export default class Character{
         this.delayMove	= 300; //represents time it takes to move one tile
         this.covidImmunity = false;
         this.hasVaccineBeenUsed = false;
+
     }
 
     placeAt(x,y){
