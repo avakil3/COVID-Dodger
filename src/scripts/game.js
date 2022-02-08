@@ -78,16 +78,14 @@ export default class Game {
         this.paused = false;
         this.spriteSpeed = 25;
 
-
-
-
-
         this.player = new Character([1,1],[45,45]);
         this.sprite1 = new CovidSprite([5,5],[5*tileW,5*tileH]);
         this.sprite2 = new CovidSprite([17,11],[17*tileW,11*tileH]);
         
-        this.sprites.push(this.sprite1,this.sprite2);
-        this.addSprites(this.sprite1,this.sprite2);
+        this.sprites.push(this.sprite1);
+        this.addSprites(this.sprite1);
+        this.sprites.push(this.sprite2);
+        this.addSprites(this.sprite2);
 
         // debugger
     }
@@ -132,6 +130,7 @@ export default class Game {
 
         }
 
+
         let tileImage = document.querySelector("#tileset");
 
         for(let y = 0; y < mapH; ++y){ // nested loops to fill in the grid based on the grid array
@@ -174,6 +173,10 @@ export default class Game {
             }
         }
 
+        if(this.collided()){
+            this.endGame();
+        }
+
         this.ctx.fillStyle = '#ffffff';
         this.ctx.fillText(`Score: ${this.score}`,10,20);
         this.ctx.fillText(`Game speed: ${speeds[this.currentSpeed].name}`,10,40);
@@ -210,5 +213,51 @@ export default class Game {
             bodyEl.append(covidSpriteEl);
         });
     }
+
+
+    collided(){
+        // debugger
+        this.sprites.forEach(sprite => {
+            let infectedArea = this.infectedArea(sprite);
+            if(this.currentSpeed !== 4){
+                console.log(infectedArea)
+            console.log(`Player: ${this.player.currentPos}`)
+            }
+            if (find(infectedArea,this.player.currentPos)|| find(infectedArea,this.player.destination)){
+                // debugger
+                return true;
+            }
+            return false;
+        });
+    }
+
+    infectedArea(sprite){
+        let validMoves = [[sprite.currentPos[0],sprite.currentPos[1]],
+                        [sprite.currentPos[0],sprite.currentPos[1]-1],
+                        [sprite.currentPos[0],sprite.currentPos[1]+1],
+                        [sprite.currentPos[0]-1,sprite.currentPos[1]],
+                        [sprite.currentPos[0]+1,sprite.currentPos[1]],
+                        [sprite.currentPos[0]+1,sprite.currentPos[1]+1],
+                        [sprite.currentPos[0]-1,sprite.currentPos[1]+1],
+                        [sprite.currentPos[0]-1,sprite.currentPos[1]-1],
+                        [sprite.currentPos[0]+1,sprite.currentPos[1]-1]
+                     ];
+        return validMoves;
+    }
+
+    endGame(){
+
+        let endGamePopUp= document.createElement("p");
+            endGamePopUp.innerText = "COLLIDED";
+            document.body.append(endGamePopUp);
+            console.log("COLLIDED");
+    }
+
+
 }
 
+function find(array, criteria) {
+    for (let i = 0; i < array.length; i++) {
+      return JSON.stringify(array[i])===JSON.stringify(criteria) ?  true : false;
+  }
+}
