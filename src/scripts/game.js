@@ -2,6 +2,7 @@ import Character from './character.js';
 import {CovidSprite} from './covidSprite.js';
 import Vaccine from './vaccine.js';
 import {backgroundMusic} from '../index.js'
+export {floorTypes,grid,tileTypes,mapW,mapH,tileW,tileH};
 
 var floorTypes = {
     solid: 0,
@@ -56,9 +57,6 @@ var tileW = 40;
 var tileH = 40;
 
 
-export {floorTypes,grid,tileTypes,mapW,mapH,tileW,tileH};
-
-
 export default class Game {
     constructor(ctx,canvasEl){
         this.ctx = ctx;
@@ -111,23 +109,27 @@ export default class Game {
         let timeElapsed = currentFrameTime - this.lastFrameTime;
         this.gameTime += Math.floor(timeElapsed * speeds[this.currentSpeed].multiplier);
 
-
         if(!this.player.move(this.gameTime) && speeds[this.currentSpeed].name !== "paused"){ // if the player is currently NOT moving
 
-            if(this.keysDown['ArrowUp'] && //check to see if up arrow is pressed and that tile above is a valid tile to move to
-                this.player.canMoveUp()){
+            if(this.keysDown['ArrowUp'] && this.player.canMoveUp()){//check to see if up arrow is pressed and that tile above is a valid tile to move to
                     this.player.moveUp(this.gameTime);
+                    this.player.playerFrameY = 3;
+                    (this.player.playerFrameX < 3) ? this.player.playerFrameX++ : this.player.playerFrameX = 0;
 
-            }else if (this.keysDown['ArrowDown'] &&
-                    this.player.canMoveDown()){
-                    this.player.moveDown(this.gameTime);    
-            }else if(this.keysDown['ArrowLeft'] && 
-                this.player.canMoveLeft()){
+            }else if (this.keysDown['ArrowDown'] && this.player.canMoveDown()){
+                    this.player.moveDown(this.gameTime);  
+                    this.player.playerFrameY = 0;
+                    (this.player.playerFrameX < 3) ? this.player.playerFrameX++ : this.player.playerFrameX = 0;
+
+            }else if(this.keysDown['ArrowLeft'] && this.player.canMoveLeft()){
                     this.player.moveLeft(this.gameTime);   
+                    this.player.playerFrameY = 1;
+                    (this.player.playerFrameX < 3) ? this.player.playerFrameX++ : this.player.playerFrameX = 0;
 
-            }else if (this.keysDown['ArrowRight'] &&
-                    this.player.canMoveRight()){
+            }else if (this.keysDown['ArrowRight'] && this.player.canMoveRight()){
                     this.player.moveRight(this.gameTime);    
+                    this.player.playerFrameY = 2;
+                    (this.player.playerFrameX < 3) ? this.player.playerFrameX++ : this.player.playerFrameX = 0;
             }
             
             if( JSON.stringify(this.player.currentPos) !== JSON.stringify(this.player.destination)){
@@ -147,7 +149,7 @@ export default class Game {
         }
 
        let mainCharacter = document.querySelector("#player");
-        this.ctx.drawImage(mainCharacter,this.player.position[0],this.player.position[1],this.player.dimensions[0],this.player.dimensions[1]);    
+        this.ctx.drawImage(mainCharacter,this.player.playerWidth * this.player.playerFrameX-3,this.player.playerHeight*this.player.playerFrameY,this.player.playerWidth,this.player.playerHeight,this.player.position[0],this.player.position[1],this.player.playerWidth,this.player.playerHeight);    
     
         for(let i=0;i<this.sprites.length;i++){
             this.ctx.drawImage(this.spriteElements[i],this.sprites[i].position[0],this.sprites[i].position[1],this.sprites[i].dimensions[0],this.sprites[i].dimensions[1]);    
@@ -192,12 +194,12 @@ export default class Game {
                 this.addSprites(newSprite); 
                 this.spriteSpeed = 20;
             } else if (this.score === 20 && this.frameCounter===0){
-                // debugger
+                
                 let newSprite = new CovidSprite([17,17],[17*tileW,17*tileH]);
                 this.sprites.push(newSprite);
                 this.addSprites(newSprite); 
             }else if (this.score === 5 && this.frameCounter===0){
-                // debugger
+                
                 let newSprite = new CovidSprite([15,4],[15*tileW,4*tileH]);
                 this.sprites.push(newSprite);
                 this.addSprites(newSprite); 

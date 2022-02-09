@@ -1,13 +1,15 @@
-import {floorTypes,grid,tileTypes,mapW,mapH} from './game.js';
-var tileW = 40;
-var tileH = 40;
+import {floorTypes,grid,tileTypes,mapW,mapH,tileW,tileH} from './game.js';
 
 export default class Character{
     constructor(currentPos,position){
         this.currentPos = currentPos.slice();
         this.destination = currentPos.slice();
         this.timeMoved = 0;
-        this.dimensions	= [60,30];
+        this.playerWidth = 47.583;
+        this.playerHeight = 54.625;
+        this.playerFrameX = 1;
+        this.playerFrameY = 0;
+        this.dimensions	= [this.playerWidth-10,this.playerHeight+5];
         this.position	= position;
         this.delayMove	= 300; //represents time it takes to move one tile
         this.covidImmunity = false;
@@ -23,16 +25,15 @@ export default class Character{
     }
 
     move(t){
-        // if the character's currentPos position equals its TileTo position, then the character is not currently moving
         if(JSON.stringify(this.currentPos) === JSON.stringify(this.destination)) { 
             return false; 
         }
 
         if((t-this.timeMoved)>=this.delayMove){
-            // debugger
+            
 		    this.placeAt(this.destination[0], this.destination[1]);
 	    }else{
-            // debugger
+            
             //this gives the pixel position at the currentPos
             this.position[0] = (this.currentPos[0] * tileW) + ((tileW-this.dimensions[0])/2);
 		    this.position[1] = (this.currentPos[1] * tileH) + ((tileH-this.dimensions[1])/2);
@@ -86,16 +87,20 @@ export default class Character{
     }
 
     moveLeft(time){
-        this.destination[0]-=1; this.timeMoved = time; 
+        this.destination[0]-=1; 
+        this.timeMoved = time; 
     }	
     moveRight(time){
-        this.destination[0]+=1; this.timeMoved = time; 
+        this.destination[0]+=1; 
+        this.timeMoved = time; 
     }
     moveUp(time){
-        this.destination[1]-=1; this.timeMoved = time; 
+        this.destination[1]-=1; 
+        this.timeMoved = time; 
     }
     moveDown(time){
-        this.destination[1]+=1; this.timeMoved = time; 
+        this.destination[1]+=1; 
+        this.timeMoved = time; 
     }
 
 

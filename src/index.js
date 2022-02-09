@@ -58,10 +58,6 @@ function playGame(){
     });
     
   
-  
-
-  
-  
     const pauseButton = document.getElementById("pause-button");
     pauseButton.addEventListener('click',game.togglePause.bind(game));  
   
