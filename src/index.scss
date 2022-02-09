@@ -20,10 +20,32 @@ canvas {
 }
 
 
+#instructions{
+    background: rgba(255, 255, 255,0.2);
+    border-radius: 15px;
+    padding: 20px;
+    padding-left: 50px;
+    width: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 20px;
+    margin-left: 100px;
+    color: white;
+}
+
+#instructions > li {
+    padding: 10px;
+    font-size: 25px;
+    font-weight: bold;
+}
 
 #game-buttons{
-    margin-left: 40%;
+    display: none;
+    margin-left: 1100px;
     text-align: center;
+}
+
+#game-buttons input{
+    padding-right: 50px;
 }
 
 #gameLogo {
@@ -33,10 +55,13 @@ canvas {
     width: 30%;
 }
 
-#logo-and-canvas{
+
+
+#mainGameElements{
     display: flex;
     align-items: center;
     position: relative;
+    margin-left: 100px;
 }
 
 
@@ -74,11 +99,8 @@ canvas {
 
 #play-button {
     position: absolute;
-    top: 60%;
-    left: 70%;
-    z-index: 1;
-    transform: translate(-50%,-50%);
-    -webkit-transform: translate(-50%,-50%);
-    -moz-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
+    width: 300px;
+    top: 600px;
+    left: 1200px;
+   
   }

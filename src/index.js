@@ -13,8 +13,24 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
   playGameButton.addEventListener("click",()=>{
     playGame();
-    backgroundMusic.play();
     playGameButton.remove();
+    document.getElementById("instructions").remove();
+
+
+    const gameButtons = document.getElementById("game-buttons");
+    gameButtons.style.display = "block";
+
+    const musicButton = document.getElementById("sound");
+    musicButton.addEventListener("click", function(e) {
+    if(backgroundMusic.paused) {
+      backgroundMusic.play();
+      backgroundMusic.loop = true;
+    }else{
+      backgroundMusic.pause();
+    }
+    
+    });
+    backgroundMusic.play();
   });
 });
 
@@ -44,17 +60,7 @@ function playGame(){
   
   
 
-  const musicButton = document.getElementById("sound");
-  musicButton.addEventListener("click", function(e) {
-    // debugger
-    if(backgroundMusic.paused) {
-      backgroundMusic.play();
-      backgroundMusic.loop = true;
-    }else{
-      backgroundMusic.pause();
-    }
-    
-  });
+  
   
     const pauseButton = document.getElementById("pause-button");
     pauseButton.addEventListener('click',game.togglePause.bind(game));  
@@ -63,7 +69,9 @@ function playGame(){
     restartButton.addEventListener('click',()=>{
       ctx.clearRect(0,0,canvasEl.width,canvasEl.height);
       playGame();
-    
+      backgroundMusic.currentTime = 0
+      backgroundMusic.play();
+      
     });
 
 

@@ -12,31 +12,37 @@
 </head>
 
 <body>
+
     <ul class="social-icons">
         <li><a href="https://www.linkedin.com/in/aagamvakil/" class="social-icon" target="_blank"> <i class="fa-brands fa-linkedin" ></i></a></li>
         <li><a href="https://github.com/avakil3/COVID-Dodger" class="social-icon" target="_blank"> <i class="fa-brands fa-github"></i></i></a></li>
     </ul>
-    <ul id="game-instructions">
-        <h2>Instructions</h2>
-        <li>Welcome to COVID Dodger!</li>
-        <li>COVID Dodger is a javascript-based game where the goal is to direct the main character around while navigating a slew of COVID-infected humans. </li>
-        <li>The player must control a character and maintain a 6-feet distance from incoming people to avoid infection. The longer the player survives, the higher the score will be.</li>
-        <li>As time progresses, the difficulty of the game will rise as more infected people will move across the screen more quickly with more random switching of direction.</li>
-        <li>Be sure to get a covid vaccine shot when it appears on the screen! The player will receive immunity for 10 seconds.</li>
-    </ul>
-    <div id = "logo-and-canvas">
+
+    <div id = "mainGameElements">
         <img src="./images/gameLogo.png" id="gameLogo">
-        <input type="image"  id="play-button" src="./images/playGame.png"/>
-        <canvas></canvas>
+        <ul id="instructions" >
+            <h1>Instructions</h1>
+            <li>Welcome to COVID Dodger! The objective of the game is to direct the player around the screen while navigating a slew of COVID-infected humans. </li>
+            <li>Control the character using the arrow keys and maintain a 6-feet distance from incoming people to avoid infection</li>
+            <li>The longer the player survives, the higher the score will be</li>
+            <li>As time progresses, the difficulty of the game will rise as more infected people will move across the screen</li>
+            <li>Be sure to get a covid vaccine shot when it appears on the screen! The player will receive immunity for 10 seconds.</li>
+        </ul>
+        <canvas ></canvas>
     </div>
-        <img class = "hiddenElements" src="./images/angry-bird.png" id="player" >
-        <img class = "hiddenElements" src="./images/tileset.png" id="tileset" >
-        <img class = "hiddenElements" src="./images/game-over.png" id="game-over" >
+
+    <input type="image"  id="play-button"  src="./images/start.png"/>
+    <img class = "hiddenElements" src="./images/angry-bird.png" id="player" >
+    <img class = "hiddenElements" src="./images/tileset.png" id="tileset" >
+    <img class = "hiddenElements" src="./images/game-over.png" id="game-over" >
+    
     <div id="game-buttons">
         <input type="image"  id="pause-button" src="./images/pauseGame.png" />
         <input type="image"  id="restart-button" src="./images/restartGame.png" />
         <input type="image"  id="sound" src="./images/sound.png" />
     </div>
+
+
 </body>
 
 </html>

@@ -152,7 +152,7 @@ export default class Game {
         for(let i=0;i<this.sprites.length;i++){
             this.ctx.drawImage(this.spriteElements[i],this.sprites[i].position[0],this.sprites[i].position[1],this.sprites[i].dimensions[0],this.sprites[i].dimensions[1]);    
         }
-        if(this.score > 5){
+        if(this.score > 15){
             for(let i=0;i<this.vaccineElements.length;i++){
                 this.ctx.drawImage(this.vaccineElements[i],this.vaccine.position[0],this.vaccine.position[1],this.vaccine.dimensions[0],this.vaccine.dimensions[1]);    
             }
@@ -210,11 +210,15 @@ export default class Game {
         }
 
         if(this.collided() && !this.player.covidImmunity){ // If collision occurs, the game ends
-             this.ctx.fillStyle = '#000';
+             this.ctx.fillStyle = '#ffffff';
 
             this.ctx.drawImage(document.querySelector("#game-over"),100,150,this.canvasEl.width-200,400);    
             this.ctx.font = "bold 30pt sans serif";
             this.ctx.fillText(`Final Score: ${this.score}`,this.canvasEl.width/3+20,600);
+            const gameOverSound = document.createElement('audio');
+            gameOverSound.src = './sounds/gameOverSound.mp3';      
+            gameOverSound.play();
+            backgroundMusic.pause();
             return; 
         }
 
