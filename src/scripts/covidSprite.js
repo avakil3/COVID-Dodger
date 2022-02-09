@@ -4,7 +4,7 @@ export class CovidSprite extends Character {
     constructor(currentPos,position){
         super(currentPos,position);
         this.timeMoved1 = 0;
-        this.dimensions = [35,35];
+        this.dimensions = [60,60];
     }
 
     move(t){

@@ -1,6 +1,7 @@
 import Character from './character.js';
 import {CovidSprite} from './covidSprite.js';
 import Vaccine from './vaccine.js';
+import {backgroundMusic} from '../index.js'
 
 var floorTypes = {
     solid: 0,
@@ -212,15 +213,19 @@ export default class Game {
              this.ctx.fillStyle = '#000';
 
             this.ctx.drawImage(document.querySelector("#game-over"),100,150,this.canvasEl.width-200,400);    
-            this.ctx.font = "bold 30pt calibri";
+            this.ctx.font = "bold 30pt sans serif";
             this.ctx.fillText(`Final Score: ${this.score}`,this.canvasEl.width/3+20,600);
             return; 
         }
 
         this.ctx.fillStyle = '#ffffff';
-        this.ctx.font = "bold 20pt comic-sans";
+        this.ctx.font = "bold 20pt sans serif";
         this.ctx.fillText(`Score: ${this.score}`,10,25);
-        // this.ctx.fillText(`Game speed: ${speeds[this.currentSpeed].name}`,10,40);
+
+        if(this.paused){
+            this.ctx.font = "bold 30pt sans serif";
+        this.ctx.fillText(`Game paused`,350,400);
+        }
         
         this.lastFrameTime = currentFrameTime;
     
@@ -238,20 +243,29 @@ export default class Game {
             this.paused = true;
             this.prevSpeed = this.currentSpeed;
             this.currentSpeed = 4; // 4 represents "this.paused" game state
+            backgroundMusic.pause();
         } else if (this.paused){
            this.paused= false;
            this.currentSpeed = this.prevSpeed;
+           backgroundMusic.play();
         }
     }
 
-    addSprites(...spriteArr){
+    addSprites(sprite){
         let bodyEl = document.getElementsByTagName("body")[0];
-        spriteArr.forEach(el => {
             let covidSpriteEl = document.createElement("img");
-            covidSpriteEl.src = "./images/covidSprite.png";
+            if(this.sprites.length===2 ||this.sprites.length===4 ){
+                covidSpriteEl.src = "./images/covidSprite1.png";
+            } else if (this.sprites.length===3) {
+                covidSpriteEl.src = "./images/covidSprite2.png";
+
+            }else{
+                covidSpriteEl.src = "./images/covidSprite3.png";
+                
+            }
+
             this.spriteElements.push(covidSpriteEl);
             bodyEl.append(covidSpriteEl);
-        });
     }
 
 
@@ -267,7 +281,7 @@ export default class Game {
     }
 
     infectedArea(sprite){
-        let validMoves = [[sprite.currentPos[0],sprite.currentPos[1]],
+        let infectedArea = [[sprite.currentPos[0],sprite.currentPos[1]],
                         [sprite.currentPos[0],sprite.currentPos[1]-1],
                         [sprite.currentPos[0],sprite.currentPos[1]+1],
                         [sprite.currentPos[0]-1,sprite.currentPos[1]],
@@ -277,7 +291,7 @@ export default class Game {
                         [sprite.currentPos[0]-1,sprite.currentPos[1]-1],
                         [sprite.currentPos[0]+1,sprite.currentPos[1]-1]
                      ];
-        return validMoves;
+        return infectedArea;
     }
 
 

@@ -37,48 +37,33 @@ canvas {
 #logo-and-canvas {
   display: flex;
   align-items: center;
-  position: relative;
 }
 
-.fa-linkedin, .fa-github {
+.fa-linkedin {
   padding: 10px 14px;
   -o-transition: 0.5s;
   -ms-transition: 0.5s;
   -moz-transition: 0.5s;
   -webkit-transition: 0.5s;
   transition: 0.5s;
+  background-color: #322f30;
 }
 
 .fa-linkedin:hover {
   background-color: #0073a4;
 }
 
-.fa-github:hover {
-  background-color: #6e5494;
-}
-
 .social-icon {
   color: #fff;
-  font-size: 3rem;
 }
 
 .social-icons li {
   vertical-align: top;
   display: inline;
+  height: 100px;
 }
 
 .social-icons a {
   color: #fff;
   text-decoration: none;
-}
-
-#play-button {
-  position: absolute;
-  top: 60%;
-  left: 70%;
-  z-index: 1;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
 }

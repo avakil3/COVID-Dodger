@@ -1,11 +1,30 @@
 import Game from './scripts/game.js';
-// import {hasGameEnded} from './scripts/game.js';
+export {backgroundMusic};
 
-document.addEventListener("DOMContentLoaded", playGame);
+
+const backgroundMusic = document.createElement('audio');
+backgroundMusic.src = './sounds/background-music.mp3';
+
+
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  const playGameButton = document.getElementById("play-button");
+ 
+
+  playGameButton.addEventListener("click",()=>{
+    playGame();
+    backgroundMusic.play();
+    playGameButton.remove();
+  });
+});
+
+
+
+
 
 
 function playGame(){
-  
+
     const canvasEl = document.getElementsByTagName("canvas")[0];
     canvasEl.width = 920;
     canvasEl.height = 800;
@@ -23,8 +42,7 @@ function playGame(){
     });
     
   
-  const backgroundMusic = document.createElement('audio');
-  backgroundMusic.src = './sounds/background-music.mp3';
+  
 
   const musicButton = document.getElementById("sound");
   musicButton.addEventListener("click", function(e) {
@@ -38,12 +56,8 @@ function playGame(){
     
   });
   
-  
-  
     const pauseButton = document.getElementById("pause-button");
-    pauseButton.addEventListener('click',game.togglePause.bind(game));
-  
-  
+    pauseButton.addEventListener('click',game.togglePause.bind(game));  
   
     const restartButton = document.getElementById("restart-button");
     restartButton.addEventListener('click',()=>{
@@ -51,7 +65,6 @@ function playGame(){
       playGame();
     
     });
-
 
 
 }
