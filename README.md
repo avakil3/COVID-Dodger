@@ -20,7 +20,51 @@ In COVID Dodger, key features include:
 
 
 ### Selected Code Snippets
-In COVID Dodger, key features include:
+* Below code is responsible for giving the player immunity for 10 seconds. In the event that the user collides with the covid vaccine item, the below code sets the 'covidImmunity' boolean to true, which temporarily disables collision detection. After 10 seconds, the immunity variable is reset.
+
+```
+if(JSON.stringify(this.vaccine.currentPos) === JSON.stringify(this.player.currentPos) && this.vaccineElements.length !== 0){
+            this.player.covidImmunity = true;
+            this.vaccineElements.pop();
+            this.player.hasVaccineBeenUsed = true;
+        }
+        if(this.player.hasVaccineBeenUsed) {
+            setTimeout(()=>{  
+                   this.player.hasVaccineBeenUsed = false;
+                   this.player.covidImmunity = false; 
+            },10000);
+        }        
+```
+* Below code represents the controller of player movement. This checks which keyboard keys have been pressed and executes the associated change in player position. This also updates the frame position of the animation towards the new player direction.
+```
+ if(!this.player.move(this.gameTime) && speeds[this.currentSpeed].name !== "paused"){ // if the player is currently NOT moving
+
+            if(this.keysDown['ArrowUp'] && this.player.canMoveUp()){
+                    this.player.moveUp(this.gameTime);
+                    this.player.playerFrameY = 3;
+                    (this.player.playerFrameX < 3) ? this.player.playerFrameX++ : this.player.playerFrameX = 0;
+
+            }else if (this.keysDown['ArrowDown'] && this.player.canMoveDown()){
+                    this.player.moveDown(this.gameTime);  
+                    this.player.playerFrameY = 0;
+                    (this.player.playerFrameX < 3) ? this.player.playerFrameX++ : this.player.playerFrameX = 0;
+
+            }else if(this.keysDown['ArrowLeft'] && this.player.canMoveLeft()){
+                    this.player.moveLeft(this.gameTime);   
+                    this.player.playerFrameY = 1;
+                    (this.player.playerFrameX < 3) ? this.player.playerFrameX++ : this.player.playerFrameX = 0;
+
+            }else if (this.keysDown['ArrowRight'] && this.player.canMoveRight()){
+                    this.player.moveRight(this.gameTime);    
+                    this.player.playerFrameY = 2;
+                    (this.player.playerFrameX < 3) ? this.player.playerFrameX++ : this.player.playerFrameX = 0;
+            }
+            
+            if( JSON.stringify(this.player.currentPos) !== JSON.stringify(this.player.destination)){
+                    this.player.timeMoved = this.gameTime;
+            }
+        }
+  ```
 
 
 ### Technologies & APIs
