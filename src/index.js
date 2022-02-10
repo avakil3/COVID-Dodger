@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const playGameButton = document.getElementById("play-button");
 
   playGameButton.addEventListener("click",()=>{
-    playGame();
+    var currentGame = playGame();
     playGameButton.remove();
     document.getElementById("instructions").remove();
 
@@ -28,6 +28,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     });
     backgroundMusic.play();
+
+ 
+    const restartButton = document.getElementById("restart-button");
+    restartButton.addEventListener('click',()=>{
+      currentGame.endGame = true;
+      currentGame = playGame();
+      backgroundMusic.currentTime = 0
+      backgroundMusic.play();
+      
+    });
+
   });
 
 });
@@ -41,7 +52,7 @@ function playGame(){
 
   let ctx = canvasEl.getContext("2d");
   var game = new Game(ctx,canvasEl);
-  const req = requestAnimationFrame(game.drawGame.bind(game));
+  requestAnimationFrame(game.drawGame.bind(game));
   
 
   document.addEventListener("keydown", function(e) {
@@ -54,16 +65,8 @@ function playGame(){
 
   const pauseButton = document.getElementById("pause-button");
   pauseButton.addEventListener('click',game.togglePause.bind(game));  
-
-  const restartButton = document.getElementById("restart-button");
-  restartButton.addEventListener('click',()=>{
-    ctx.clearRect(0,0,canvasEl.width,canvasEl.height);
-    window.cancelAnimationFrame(req);
-    playGame();
-    backgroundMusic.currentTime = 0
-    backgroundMusic.play();
-    
-  });
-
+  
+  return game;
 
 }
+

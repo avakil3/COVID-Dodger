@@ -10,7 +10,6 @@ var floorTypes = {
     water: 2,
 };
 
-
 var speeds = [
     {name: "level1", multiplier:1},
     {name: "level2", multiplier:1.2},
@@ -76,7 +75,7 @@ export default class Game {
         this.sprites = [];
         this.spriteElements = [];
         this.vaccineElements = [];
-
+        this.endGame = false;
         this.frameCounter = 0;
         this.gameTime = 0;
         this.paused = false;
@@ -96,6 +95,7 @@ export default class Game {
 
     drawGame(){
         if(this.ctx === null) return;
+	    if(this.endGame) return;
 
         if (this.score > 10 && this.score < 40 && speeds[this.currentSpeed].name !== "paused"){
             this.currentSpeed= 1;
@@ -104,7 +104,6 @@ export default class Game {
         }else if (this.score > 60 && speeds[this.currentSpeed].name !== "paused"){
             this.currentSpeed= 3;
         }
-        
         let currentFrameTime = Date.now();
         let timeElapsed = currentFrameTime - this.lastFrameTime;
         this.gameTime += Math.floor(timeElapsed * speeds[this.currentSpeed].multiplier);
@@ -194,16 +193,17 @@ export default class Game {
                 this.addSprites(newSprite); 
                 this.spriteSpeed = 20;
             } else if (this.score === 20 && this.frameCounter===0){
-                
                 let newSprite = new CovidSprite([17,17],[17*tileW,17*tileH]);
                 this.sprites.push(newSprite);
                 this.addSprites(newSprite); 
+                newSprite = new CovidSprite([15,8],[15*tileW,8*tileH]);
+                this.sprites.push(newSprite);
+                this.addSprites(newSprite); 
             }else if (this.score === 5 && this.frameCounter===0){
-                
                 let newSprite = new CovidSprite([15,4],[15*tileW,4*tileH]);
                 this.sprites.push(newSprite);
                 this.addSprites(newSprite); 
-            }  
+            } 
             
 
             if (move) this.sprites.forEach(sprite => sprite.moveSprite(this.gameTime));
@@ -232,9 +232,8 @@ export default class Game {
         }
         
         this.lastFrameTime = currentFrameTime;
-    
           
-	    requestAnimationFrame(this.drawGame.bind(this));
+       requestAnimationFrame(this.drawGame.bind(this));
     }
     
     toGridIndex(x, y){
