@@ -13,7 +13,8 @@ canvas {
     display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+  width: 50%;
  
 }
 
@@ -23,22 +24,22 @@ canvas {
     border-radius: 15px;
     padding: 20px;
     padding-left: 50px;
-    width: auto;
+    // width: auto;
     font-family: Arial, Helvetica, sans-serif;
     margin: 20px;
     margin-left: 100px;
-    color: white;
+    color: rgba(77,79,121,255);
 }
 
 #instructions > li {
     padding: 10px;
-    font-size: 25px;
+    font-size: 15x;
     font-weight: bold;
 }
 
 #game-buttons{
     display: none;
-    margin-left: 1100px;
+    margin-left: 50%;
     text-align: center;
 }
 
@@ -84,21 +85,22 @@ canvas {
     font-size: 3rem;
 
 }
-.social-icons li {
+.social-icons > * {
     vertical-align: top;
     display: inline;
-    // height: 200px;
 }
+
 .social-icons a {
     color: #fff;
     text-decoration: none;
 }
 
 
+
 #play-button {
-    position: absolute;
-    width: 300px;
-    top: 600px;
-    left: 1500px;
-   
+    // position: absolute;
+    
+    width:150px;
+    padding-left: 50px;
+    left: 15%;
   }
