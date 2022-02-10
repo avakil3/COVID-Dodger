@@ -149,7 +149,9 @@ export default class Game {
         }
 
        let mainCharacter = document.querySelector("#player");
-        this.ctx.drawImage(mainCharacter,this.player.playerWidth * this.player.playerFrameX-3,this.player.playerHeight*this.player.playerFrameY,this.player.playerWidth,this.player.playerHeight,this.player.position[0],this.player.position[1],this.player.playerWidth,this.player.playerHeight);    
+
+        this.ctx.drawImage(mainCharacter,this.player.playerWidth * this.player.playerFrameX-3,this.player.playerHeight*this.player.playerFrameY,
+        this.player.playerWidth,this.player.playerHeight,this.player.position[0],this.player.position[1],this.player.playerWidth,this.player.playerHeight);    
     
         for(let i=0;i<this.sprites.length;i++){
             this.ctx.drawImage(this.spriteElements[i],this.sprites[i].position[0],this.sprites[i].position[1],this.sprites[i].dimensions[0],this.sprites[i].dimensions[1]);    
@@ -162,10 +164,8 @@ export default class Game {
 
         if(this.player.covidImmunity){
             this.ctx.fillStyle = "#ffffff";
-            this.ctx.font = "bold 20pt calibri";
-
+            this.ctx.font = "bold 20pt sans serif";
             this.ctx.fillText(`You are immune for 10 seconds!`,this.canvasEl.width-600,80);
-    
         }
         
         // if the player captures the vaccine, then remove that vaccine from the vaccines list
@@ -181,12 +181,12 @@ export default class Game {
             },10000);
         }
 
-        //logic for Sprites Movement
+        //logic for Sprites creation
         if(speeds[this.currentSpeed].name !== "paused"){
             let move = false;
             this.frameCounter +=1;
             this.frameCounter = this.frameCounter % this.spriteSpeed;
-            if (this.frameCounter === this.spriteSpeed-1) {move = true};
+            if (this.frameCounter === this.spriteSpeed-1) move = true;
             
             if (this.score === 10 && this.frameCounter===0){
                 let newSprite = new CovidSprite([5,12],[5*tileW,12*tileH]);
@@ -206,9 +206,7 @@ export default class Game {
             }  
             
 
-            if (move) {
-                this.sprites.forEach(sprite => sprite.moveHelper(this.gameTime));
-            }
+            if (move) this.sprites.forEach(sprite => sprite.moveSprite(this.gameTime));
         }
 
         if(this.collided() && !this.player.covidImmunity){ // If collision occurs, the game ends
@@ -230,7 +228,7 @@ export default class Game {
 
         if(this.paused){
             this.ctx.font = "bold 30pt sans serif";
-        this.ctx.fillText(`Game paused`,350,400);
+            this.ctx.fillText(`Game paused`,350,400);
         }
         
         this.lastFrameTime = currentFrameTime;
@@ -244,11 +242,10 @@ export default class Game {
     }
 
      togglePause(){
-        //  debugger
         if (!this.paused){
             this.paused = true;
             this.prevSpeed = this.currentSpeed;
-            this.currentSpeed = 4; // 4 represents "this.paused" game state
+            this.currentSpeed = 4; // 4 represents "paused" game state
             backgroundMusic.pause();
         } else if (this.paused){
            this.paused= false;
@@ -267,7 +264,6 @@ export default class Game {
 
             }else{
                 covidSpriteEl.src = "./images/covidSprite3.png";
-                
             }
 
             this.spriteElements.push(covidSpriteEl);

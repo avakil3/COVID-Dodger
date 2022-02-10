@@ -1,5 +1,4 @@
-var tileW = 40;
-var tileH = 40;
+import {tileW,tileH} from './game.js';
 
 export default class Vaccine {
     constructor(position){

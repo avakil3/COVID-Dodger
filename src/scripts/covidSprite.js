@@ -10,11 +10,9 @@ export class CovidSprite extends Character {
     move(t){
 
         if((t-this.timeMoved1)>=this.delayMove){
-            // debugger
 		    this.placeAt(this.destination[0], this.destination[1]);
             this.timeMoved1 = t;
 	    }else{
-            // debugger
             //this gives the pixel position at the currentPos
             this.position[0] = (this.destination[0] * tileW) + ((tileW-this.dimensions[0])/2);
 		    this.position[1] = (this.destination[1] * tileH) + ((tileH-this.dimensions[1])/2);
@@ -27,7 +25,7 @@ export class CovidSprite extends Character {
         return true;
     }
 
-    moveHelper(gameTime){
+    moveSprite(gameTime){
         this.move(gameTime);
         this.timeMoved1 = gameTime;
         let validMoves = [];

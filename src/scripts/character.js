@@ -25,15 +25,11 @@ export default class Character{
     }
 
     move(t){
-        if(JSON.stringify(this.currentPos) === JSON.stringify(this.destination)) { 
-            return false; 
-        }
+        if(JSON.stringify(this.currentPos) === JSON.stringify(this.destination))  return false; 
 
         if((t-this.timeMoved)>=this.delayMove){
-            
 		    this.placeAt(this.destination[0], this.destination[1]);
 	    }else{
-            
             //this gives the pixel position at the currentPos
             this.position[0] = (this.currentPos[0] * tileW) + ((tileW-this.dimensions[0])/2);
 		    this.position[1] = (this.currentPos[1] * tileH) + ((tileH-this.dimensions[1])/2);
