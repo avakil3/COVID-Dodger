@@ -3,10 +3,12 @@
 COVID Dodger is a javascript-based game where the goal is to direct the main character around the screen while navigating a slew of COVID-infected humans. 
 The player must use the arrow keys to move the character and maintain a 6-feet distance from incoming people to avoid infection. The longer the player survives, the higher the score will be. As time progresses, the difficulty of the game will rise as more infected people will move across the screen more quickly and with more random switching of direction. 
 
-### Features
-In COVID Dodger, users will be able to:
+Click here for link to live site.
 
-1. Control the main character across the screen using the keyboard arrow keys  
+### Features
+In COVID Dodger, key features include:
+
+1. The ability to control the main character across the screen using the keyboard arrow keys
 2. After a certain amount of time, a covid vaccine item will appear on the screen, which will give the player immunity for 10 seconds.
 4. Over time, more sprites will be added to the game to increase the difficulty.
 5. The user must avoid coming into contact with an infected person for as long as possible.
