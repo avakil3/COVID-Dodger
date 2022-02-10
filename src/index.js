@@ -40,8 +40,8 @@ function playGame(){
   canvasEl.height = 800;
 
   let ctx = canvasEl.getContext("2d");
-  const game = new Game(ctx,canvasEl);
-  requestAnimationFrame(game.drawGame.bind(game));
+  var game = new Game(ctx,canvasEl);
+  const req = requestAnimationFrame(game.drawGame.bind(game));
   
 
   document.addEventListener("keydown", function(e) {
@@ -58,6 +58,7 @@ function playGame(){
   const restartButton = document.getElementById("restart-button");
   restartButton.addEventListener('click',()=>{
     ctx.clearRect(0,0,canvasEl.width,canvasEl.height);
+    window.cancelAnimationFrame(req);
     playGame();
     backgroundMusic.currentTime = 0
     backgroundMusic.play();
